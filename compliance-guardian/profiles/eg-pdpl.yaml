@@ -1,0 +1,8 @@
+name: eg-pdpl
+description: Evaluate Egyptian PDPL Law 151/2020 and Executive Regulations (Decision 816/2025). Article references unverified.
+frameworks: [eg_pdpl, eng_baselines]
+config_defaults: {}
+applicability_questions:
+  - Is personal data of Egyptian data subjects processed (in or outside Egypt)?
+  - Are licences/permits from the Personal Data Protection Center required (e.g. sensitive data, cross-border transfer)?
+  - Has the ER compliance window passed for this organisation?

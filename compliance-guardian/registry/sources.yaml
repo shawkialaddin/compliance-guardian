@@ -1,0 +1,209 @@
+# compliance-guardian regulatory source registry
+# ---------------------------------------------------------------------------------------------
+# Rules for maintainers (enforced by the update-rules workflow and self-tests):
+#  * Official sources first. `verification` values:
+#      CONFIRMED          - metadata confirmed on an official regulator/government page or PDF
+#      PARTIAL            - existence/name/code confirmed officially; other metadata not
+#      THIRD_PARTY_ONLY   - only secondary sources (law firms, trackers) available
+#      UNVERIFIED         - not confirmed
+#  * Never invent clause numbers, deadlines or legal conclusions. Unknown -> "UNVERIFIED".
+#  * baseline_locked: a newer edition is NOT adopted silently. Propose it in CHANGELOG.md with
+#    evidence; bump registry_version only after review.
+#  * Where an English text is a translation, the Arabic text is binding (noted per source).
+registry_version: "2026.11.16"
+baseline_locked: true
+verified_on: "2026-11-16"
+sources:
+  - id: SRC-EU-GDPR
+    framework: eu_gdpr
+    regulator: European Parliament and Council of the European Union
+    document: Regulation (EU) 2016/679 (General Data Protection Regulation)
+    edition: "CELEX 32016R0679, OJ L 119, 4.5.2016"
+    publication_date: "2016-05-04"
+    effective_date: "2018-05-25"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32016R0679
+    verification: CONFIRMED
+    verified_on: "2026-11-16"
+    notes: Corrigenda not reviewed. Member-state laws and EDPB guidance are out of registry scope.
+
+  - id: SRC-KSA-NCA-ECC
+    framework: ksa_nca_ecc
+    regulator: National Cybersecurity Authority (NCA), Kingdom of Saudi Arabia
+    document: Essential Cybersecurity Controls
+    edition: "ECC-2:2024 (replaces ECC-1:2018)"
+    publication_date: "2024 (year only stated)"
+    effective_date: UNVERIFIED
+    url: https://cdn.nca.gov.sa/api/files/public/upload/86e09090-44e4-481f-bc28-355673607654_ECC--2024-EN.pdf
+    listing_url: https://nca.gov.sa/en/regulatory-documents/controls-list/ecc/
+    verification: CONFIRMED
+    verified_on: "2026-11-16"
+    notes: >
+      4 main domains, 28 subdomains, 108 main controls (per document). Former domain 5 (ICS) moved to OTCC.
+      Arabic version is binding. Scope: government organizations (inside and outside KSA), their
+      affiliated companies, and CNI operators. Sub-control numbers (e.g. 2-2-3-1) were not extracted:
+      cite at subdomain level unless verified.
+
+  - id: SRC-KSA-NCA-CCC
+    framework: ksa_nca_ccc
+    regulator: National Cybersecurity Authority (NCA), Kingdom of Saudi Arabia
+    document: Cloud Cybersecurity Controls
+    edition: "CCC-2:2024 (replaces CCC-1:2020)"
+    publication_date: "2024 (year only stated)"
+    effective_date: UNVERIFIED
+    url: https://cdn.nca.gov.sa/api/files/public/upload/6d5408a3-d8e6-4e96-963b-2c7198e5b7c2_CCC-2-2024-EN-.pdf
+    verification: CONFIRMED
+    verified_on: "2026-11-16"
+    notes: Applies to cloud service providers (CSPs) and cloud service tenants (CSTs) in scope. Domain/control numbering NOT extracted - UNVERIFIED. Arabic binding.
+
+  - id: SRC-KSA-NCA-DCC
+    framework: ksa_nca_dcc
+    regulator: National Cybersecurity Authority (NCA), Kingdom of Saudi Arabia
+    document: Data Cybersecurity Controls
+    edition: "DCC-1:2022"
+    publication_date: "2022 (year only stated)"
+    effective_date: UNVERIFIED
+    url: https://cdn.nca.gov.sa/api/files/public/upload/1c2cfb9c-7788-4549-9f29-f337500f1787_Data-Cybersecurity-Controls-.pdf
+    verification: CONFIRMED
+    verified_on: "2026-11-16"
+    notes: Control numbering NOT extracted - UNVERIFIED. Arabic binding.
+
+  - id: SRC-KSA-NCA-NCNICC
+    framework: ksa_nca_ncnicc
+    regulator: National Cybersecurity Authority (NCA), Kingdom of Saudi Arabia
+    document: "Non-CNI Private Sector Entities Cybersecurity Controls"
+    edition: "NCNICC-1:2025"
+    publication_date: UNVERIFIED
+    effective_date: UNVERIFIED
+    url: https://cdn.nca.gov.sa/api/files/public/upload/721bed5c-5304-497c-a5ac-a92a049e6306_NCNICC-AR-.pdf
+    verification: PARTIAL
+    verified_on: "2026-11-16"
+    notes: >
+      Official Arabic PDF confirms code and title only. No official English text found. Structure, scope
+      and size-tiered obligations are known only from third parties -> treat every control mapping as
+      UNVERIFIED and LEGAL_REVIEW_REQUIRED.
+
+  - id: SRC-KSA-PDPL
+    framework: ksa_pdpl
+    regulator: Saudi Data & AI Authority (SDAIA) - Competent Authority
+    document: Personal Data Protection Law
+    edition: "Royal Decree M/19 (9/2/1443H), amended by Royal Decree M/148 (5/9/1444H)"
+    publication_date: UNVERIFIED
+    effective_date: "2023-09-14 (THIRD_PARTY_ONLY; Art. 43 sets entry into force 720 days after Official Gazette publication)"
+    url: https://dgp.sdaia.gov.sa/wps/portal/pdp/knowledgecenter/details/PDPL/
+    verification: CONFIRMED
+    verified_on: "2026-11-16"
+    notes: English text is a translation; Arabic (Umm Al-Qura / BOE) is official. Law Art. 32 is repealed. Grace-period end date (2024-09-14) is third-party only.
+
+  - id: SRC-KSA-PDPL-IR
+    framework: ksa_pdpl
+    regulator: Saudi Data & AI Authority (SDAIA)
+    document: Implementing Regulation of the Personal Data Protection Law
+    edition: "38 articles (no version label observed)"
+    publication_date: UNVERIFIED
+    effective_date: "From the Law's entry into force (IR Art. 38)"
+    url: https://dgp.sdaia.gov.sa/wps/portal/pdp/knowledgecenter/details/PDPL2/
+    verification: CONFIRMED
+    verified_on: "2026-11-16"
+    notes: IR article numbers are independent of Law article numbers - cite as "PDPL IR Art. N".
+
+  - id: SRC-KSA-PDPL-TRANSFER
+    framework: ksa_pdpl
+    regulator: Saudi Data & AI Authority (SDAIA)
+    document: Regulation on Personal Data Transfer outside the Kingdom
+    edition: "Version 2.0 (August 2024)"
+    publication_date: "2024-08"
+    effective_date: UNVERIFIED
+    url: https://dgp.sdaia.gov.sa/wps/wcm/connect/e5bbede0-1119-4f70-b4ef-f043ce58d780/Regulation+on+Personal+Data+Transfer+Outside+the+Kingdom..pdf?MOD=AJPERES
+    verification: CONFIRMED
+    verified_on: "2026-11-16"
+    notes: An older HTML text with different wording also exists on dgp.sdaia.gov.sa; check for newer versions at each update.
+
+  - id: SRC-EG-PDPL
+    framework: eg_pdpl
+    regulator: Personal Data Protection Center (PDPC), Arab Republic of Egypt
+    document: "Law No. 151 of 2020 on Personal Data Protection"
+    edition: "Law 151/2020"
+    publication_date: "2020-07-15 (THIRD_PARTY_ONLY: Official Gazette issue 28 bis (h))"
+    effective_date: "2020-10-16 (THIRD_PARTY_ONLY)"
+    url: https://pdpc.gov.eg/
+    verification: THIRD_PARTY_ONLY
+    verified_on: "2026-11-16"
+    notes: Official text Arabic only; PDPC site is a JS app whose documents could not be retrieved automatically.
+
+  - id: SRC-EG-PDPL-ER
+    framework: eg_pdpl
+    regulator: "UNVERIFIED (reported: Minister of Communications and Information Technology)"
+    document: "Executive Regulations of Law No. 151 of 2020 (Decision No. 816 of 2025)"
+    edition: "Decision 816/2025"
+    publication_date: "c. 2025-11 (THIRD_PARTY_ONLY; exact gazette date unconfirmed)"
+    effective_date: "THIRD_PARTY_ONLY: day after gazette publication; ~1-year compliance window reported"
+    url: https://pdpc.gov.eg/
+    verification: THIRD_PARTY_ONLY
+    verified_on: "2026-11-16"
+    notes: Article numbers and licensing/permit requirements must be verified against the Arabic Official Gazette text before citation. Compliance deadline may already have passed - LEGAL_REVIEW_REQUIRED.
+
+  - id: SRC-EG-CYBERCRIME
+    framework: eg_cyber
+    regulator: Arab Republic of Egypt (courts/competent authorities; NTRA roles per law)
+    document: "Law No. 175 of 2018 on Anti-Cyber and Information Technology Crimes"
+    edition: "Law 175/2018"
+    publication_date: "2018-08-14 (THIRD_PARTY_ONLY)"
+    effective_date: "2018-08-15 (THIRD_PARTY_ONLY)"
+    url: UNVERIFIED
+    verification: THIRD_PARTY_ONLY
+    verified_on: "2026-11-16"
+    notes: Official Arabic text not retrieved. Service-provider obligations (e.g. data retention) must be verified before reliance.
+
+  - id: SRC-EG-NCSS
+    framework: eg_cyber
+    regulator: Egyptian Supreme Cybersecurity Council (ESCC) / MCIT
+    document: National Cybersecurity Strategy 2023-2027
+    edition: "2023-2027"
+    publication_date: "2024-01"
+    effective_date: "n/a (strategy, not binding regulation)"
+    url: https://mcit.gov.eg/en/Publication/Publication_Summary/10492
+    verification: PARTIAL
+    verified_on: "2026-11-16"
+    notes: No official public NTRA cybersecurity requirements framework found (UNVERIFIED). Sectoral NTRA/ESCC requirements depend on licensing scope - obtain from regulator/contract.
+
+  - id: SRC-OWASP-TOP10
+    framework: eng_baselines
+    regulator: OWASP Foundation
+    document: OWASP Top 10
+    edition: "2025 (current). Rule tags use the 2021 edition IDs (OWASP-2021:Axx) until remapped and reviewed."
+    url: https://top10.owasp.org/2025/
+    verification: CONFIRMED
+    verified_on: "2026-11-16"
+  - id: SRC-OWASP-API
+    framework: eng_baselines
+    regulator: OWASP Foundation
+    document: OWASP API Security Top 10
+    edition: "2023"
+    url: https://owasp.org/API-Security/
+    verification: CONFIRMED
+    verified_on: "2026-11-16"
+  - id: SRC-OWASP-ASVS
+    framework: eng_baselines
+    regulator: OWASP Foundation
+    document: Application Security Verification Standard
+    edition: "5.0.0 (2025-05-30)"
+    url: https://asvs.owasp.org/
+    verification: CONFIRMED
+    verified_on: "2026-11-16"
+    notes: ASVS requirement IDs are not cited (numbering changed in 5.0); map at chapter level after review.
+  - id: SRC-CWE-TOP25
+    framework: eng_baselines
+    regulator: MITRE
+    document: CWE Top 25 Most Dangerous Software Weaknesses
+    edition: "2025"
+    url: https://cwe.mitre.org/top25/
+    verification: CONFIRMED
+    verified_on: "2026-11-16"
+  - id: SRC-NIST-SSDF
+    framework: eng_baselines
+    regulator: NIST
+    document: SP 800-218 Secure Software Development Framework
+    edition: "Version 1.1 (final, 2022-02). Rev. 1 (SSDF 1.2) is a draft - not adopted."
+    url: https://csrc.nist.gov/pubs/sp/800/218/final
+    verification: CONFIRMED
+    verified_on: "2026-11-16"

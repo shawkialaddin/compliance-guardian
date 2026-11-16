@@ -1,0 +1,8 @@
+# compliance-guardian scanning its own repository (dogfooding).
+schema_version: 1
+project: {name: compliance-guardian, type: python}
+organization: {classification: [private], cloud_role: none}
+processing_role: []
+personal_data_categories: []
+scan:
+  exclude: ["compliance-guardian/tests/fixtures/**", "compliance-guardian/templates/tests/**", "compliance-guardian/templates/evidence/**"]

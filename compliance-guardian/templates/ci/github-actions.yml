@@ -1,0 +1,36 @@
+# compliance-guardian CI gate (GitHub Actions). Requires the scanner vendored into the repo:
+#   python3 ~/.claude/skills/compliance-guardian/scripts/cg.py vendor .compliance-guardian
+# No code leaves the runner except: SARIF upload to GitHub code scanning (same platform hosting the code).
+name: compliance-guardian
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+  security-events: write   # only for SARIF upload; remove with the upload step if unwanted
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0, persist-credentials: false}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Install minimal deps (pinned)
+        run: python -m pip install "pyyaml==6.0.2" "jsonschema==4.23.0"
+      - name: Incremental scan (PR)
+        if: github.event_name == 'pull_request'
+        run: python .compliance-guardian/scripts/cg.py scan . --mode changed --since "origin/${{ github.base_ref }}" --fail-on HIGH
+      - name: Full scan + reports + release gate
+        if: github.event_name == 'push'
+        run: python .compliance-guardian/scripts/cg.py release . --out compliance-reports
+      - name: SARIF
+        if: always()
+        run: python .compliance-guardian/scripts/cg.py scan . --format sarif --out compliance-guardian.sarif
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with: {sarif_file: compliance-guardian.sarif, category: compliance-guardian}
+      - uses: actions/upload-artifact@v4
+        if: always() && github.event_name == 'push'
+        with: {name: compliance-reports, path: compliance-reports, retention-days: 30}

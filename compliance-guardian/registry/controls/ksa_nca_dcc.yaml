@@ -1,0 +1,24 @@
+framework: ksa_nca_dcc
+name: NCA Data Cybersecurity Controls (DCC-1:2022)
+kind: legal
+obligation_type: legal
+source: SRC-KSA-NCA-DCC
+controls:
+  - id: DCC-CLASS
+    reference: "DCC-1:2022 (data classification-based protection; control number UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Protection according to data classification
+    engineering_requirements:
+      - {id: DCC-CLASS-ER1, requirement: "Data classification levels mapped to fields/models and access restrictions", verification: automated_partial, rules: [CG-PRIV-001, CG-ODOO-VIEW-001]}
+  - id: DCC-LEAK
+    reference: "DCC-1:2022 (data leakage / printing / transfer; control number UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Data leakage prevention
+    engineering_requirements:
+      - {id: DCC-LEAK-ER1, requirement: "Export/report/print features restricted to authorised roles; no bulk public data exposure", verification: automated_partial, rules: [CG-ODOO-SUDO-002, CG-ODOO-ACL-002]}
+  - id: DCC-DISPOSAL
+    reference: "DCC-1:2022 (secure data disposal; control number UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Secure disposal
+    engineering_requirements:
+      - {id: DCC-DISP-ER1, requirement: "Disposal/anonymisation mechanisms exist for data beyond retention", verification: automated_partial, rules: [CG-PRIV-003]}

@@ -1,0 +1,30 @@
+rules:
+  - id: js-innerhtml-dynamic
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: Dynamic value assigned to innerHTML/outerHTML. Use textContent or sanitize.
+    metadata: {cg_rule: CG-JS-XSS-001, cwe: ["CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"], owasp: ["A05:2025"], confidence: LOW, category: security}
+    patterns:
+      - pattern-either:
+          - pattern: $EL.innerHTML = $V
+          - pattern: $EL.outerHTML = $V
+      - pattern-not: $EL.innerHTML = "..."
+      - pattern-not: $EL.outerHTML = "..."
+  - id: js-owl-markup-dynamic
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: OWL markup() disables escaping; only wrap sanitized HTML.
+    metadata: {cg_rule: CG-JS-XSS-002, cwe: ["CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"], owasp: ["A05:2025"], confidence: LOW, category: security}
+    patterns:
+      - pattern: markup($V)
+      - pattern-not: markup("...")
+  - id: js-eval
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: eval/new Function with dynamic input.
+    metadata: {cg_rule: CG-JS-EVAL-001, cwe: ["CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"], owasp: ["A05:2025"], confidence: MEDIUM, category: security}
+    pattern-either:
+      - patterns:
+          - pattern: eval($X)
+          - pattern-not: eval("...")
+      - pattern: new Function(...)

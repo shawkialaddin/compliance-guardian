@@ -1,0 +1,7 @@
+name: ksa-nca-ccc
+description: Evaluate NCA CCC-2:2024 for cloud service providers/tenants in scope.
+frameworks: [ksa_nca_ccc, ksa_nca_ecc, eng_baselines]
+config_defaults: {}
+applicability_questions:
+  - Is the organisation a cloud service provider or a cloud service tenant subject to CCC?
+  - What data classification level is hosted?

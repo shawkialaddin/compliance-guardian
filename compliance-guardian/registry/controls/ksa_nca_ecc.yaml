@@ -1,0 +1,71 @@
+framework: ksa_nca_ecc
+name: NCA Essential Cybersecurity Controls (ECC-2:2024)
+kind: legal
+obligation_type: legal          # mandatory for in-scope entities (government, affiliates, CNI); otherwise contractual/recommended
+source: SRC-KSA-NCA-ECC
+# Subdomain numbers/titles VERIFIED against the official English PDF (Arabic is binding).
+# Individual control/sub-control numbers are NOT cited (not extracted) - map at subdomain level.
+controls:
+  - id: ECC-1-6
+    reference: "ECC-2:2024 subdomain 1-6"
+    reference_status: VERIFIED
+    title: Cybersecurity in Information and Technology Project Management
+    engineering_requirements:
+      - {id: ECC-1-6-ER1, requirement: "Secure SDLC evidence: security requirements defined pre-development, code review and security testing before release (this workflow's reports)", verification: manual}
+      - {id: ECC-1-6-ER2, requirement: "Automated security review executed for the release scope", verification: automated_partial, rules: [CG-PY-SQLI-001, CG-ODOO-SUDO-001, CG-SEC-001]}
+  - id: ECC-2-2
+    reference: "ECC-2:2024 subdomain 2-2"
+    reference_status: VERIFIED
+    title: Identity and Access Management
+    engineering_requirements:
+      - {id: ECC-2-2-ER1, requirement: "Least privilege and need-to-know enforced in application authorisation", verification: automated_partial, rules: [CG-ODOO-SUDO-001, CG-ODOO-SUDO-003, CG-ODOO-SUDO-004, CG-ODOO-AUTH-001, CG-ODOO-AUTH-002, CG-ODOO-GROUP-001, CG-ODOO-ACL-001, CG-ODOO-ACL-002, CG-ODOO-ACL-003, CG-ODOO-RULE-001, CG-ODOO-RULE-002]}
+      - {id: ECC-2-2-ER2, requirement: "MFA, privileged access management and periodic access review are evidenced", verification: manual}
+  - id: ECC-2-7
+    reference: "ECC-2:2024 subdomain 2-7"
+    reference_status: VERIFIED
+    title: Data and Information Protection
+    engineering_requirements:
+      - {id: ECC-2-7-ER1, requirement: "Classified/sensitive data restricted and not leaked via logs, chatter or public endpoints", verification: automated_partial, rules: [CG-PRIV-001, CG-ODOO-PRIV-002, CG-PY-LOG-001, CG-ODOO-SUDO-002, CG-ODOO-INFO-001]}
+  - id: ECC-2-8
+    reference: "ECC-2:2024 subdomain 2-8"
+    reference_status: VERIFIED
+    title: Cryptography
+    engineering_requirements:
+      - {id: ECC-2-8-ER1, requirement: "Approved cryptographic primitives, TLS verification and CSPRNG usage (NCA National Cryptographic Standards apply where in scope)", verification: automated_partial, rules: [CG-PY-TLS-001, CG-JS-TLS-001, CG-PY-CRYPTO-001, CG-PY-CRYPTO-002, CG-PY-JWT-001]}
+  - id: ECC-2-9
+    reference: "ECC-2:2024 subdomain 2-9"
+    reference_status: VERIFIED
+    title: Backup and Recovery Management
+    engineering_requirements:
+      - {id: ECC-2-9-ER1, requirement: "Backup scope, frequency, protection and restore tests evidenced", verification: manual}
+  - id: ECC-2-10
+    reference: "ECC-2:2024 subdomain 2-10"
+    reference_status: VERIFIED
+    title: Vulnerabilities Management
+    engineering_requirements:
+      - {id: ECC-2-10-ER1, requirement: "Dependencies and images scanned for known vulnerabilities; findings remediated by severity", verification: automated_partial, rules: ["EXT-pip-audit-*", "EXT-trivy-*", CG-IAC-DOCKER-003]}
+  - id: ECC-2-11
+    reference: "ECC-2:2024 subdomain 2-11"
+    reference_status: VERIFIED
+    title: Penetration Testing
+    engineering_requirements:
+      - {id: ECC-2-11-ER1, requirement: "Penetration test performed per scope/frequency; report retained", verification: manual}
+  - id: ECC-2-12
+    reference: "ECC-2:2024 subdomain 2-12"
+    reference_status: VERIFIED
+    title: Cybersecurity Event Logs and Monitoring Management
+    engineering_requirements:
+      - {id: ECC-2-12-ER1, requirement: "Security events (auth, privilege changes, exports) logged centrally and monitored; logs exclude secrets", verification: automated_partial, rules: [CG-PY-LOG-001]}
+  - id: ECC-2-15
+    reference: "ECC-2:2024 subdomain 2-15"
+    reference_status: VERIFIED
+    title: Web Application Security
+    engineering_requirements:
+      - {id: ECC-2-15-ER1, requirement: "Web application weaknesses (OWASP classes) absent: injection, XSS, CSRF, SSRF, insecure upload, misconfiguration", verification: automated_partial, rules: [CG-PY-SQLI-001, CG-PY-CMDI-001, CG-PY-EVAL-001, CG-PY-SSRF-001, CG-PY-PATH-001, CG-ODOO-XSS-001, CG-ODOO-XSS-002, CG-ODOO-XSS-003, CG-ODOO-CSRF-001, CG-ODOO-CORS-001, CG-ODOO-UPLOAD-001, CG-ODOO-CONF-002, CG-ODOO-CONF-003, CG-JS-XSS-001, CG-JS-EVAL-001, "EXT-semgrep-*"]}
+      - {id: ECC-2-15-ER2, requirement: "WAF / multi-tier architecture / secure session management per NCA scope", verification: manual}
+  - id: ECC-4-2
+    reference: "ECC-2:2024 subdomain 4-2"
+    reference_status: VERIFIED
+    title: Cloud Computing and Hosting Cybersecurity
+    engineering_requirements:
+      - {id: ECC-4-2-ER1, requirement: "Hosting location and cloud provider obligations (incl. data location requirements) determined", verification: legal, rules: [CG-PRIV-005]}

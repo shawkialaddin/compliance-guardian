@@ -1,0 +1,10 @@
+# Local pre-commit gate: fast incremental scan of staged files; blocks on HIGH+ candidates (override deliberately with --no-verify).
+repos:
+  - repo: local
+    hooks:
+      - id: compliance-guardian
+        name: compliance-guardian (security/privacy)
+        entry: python3 .compliance-guardian/scripts/cg.py scan . --fail-on HIGH --min-severity MEDIUM --files
+        language: system
+        pass_filenames: true
+        types_or: [python, xml, javascript, ts, csv, yaml, dockerfile]

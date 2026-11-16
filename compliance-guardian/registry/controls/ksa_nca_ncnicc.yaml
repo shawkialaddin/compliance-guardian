@@ -1,0 +1,19 @@
+framework: ksa_nca_ncnicc
+name: NCA Non-CNI Private Sector Entities Cybersecurity Controls (NCNICC-1:2025)
+kind: legal
+obligation_type: legal
+source: SRC-KSA-NCA-NCNICC
+# Only the Arabic official text was located; structure and scope are unverified. All items require legal review.
+controls:
+  - id: NCNICC-SCOPE
+    reference: "NCNICC-1:2025 (scope and entity-size tiers; UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Applicability and obligation tier
+    engineering_requirements:
+      - {id: NCNICC-SCOPE-ER1, requirement: "Determine whether the entity is in scope and which tier of controls applies", verification: legal}
+  - id: NCNICC-TECH
+    reference: "NCNICC-1:2025 (technical protection controls; UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Baseline technical controls (provisional mapping)
+    engineering_requirements:
+      - {id: NCNICC-TECH-ER1, requirement: "Baseline application security controls (access control, injection, secrets) - provisional mapping pending official text review", verification: automated_partial, rules: [CG-ODOO-SUDO-001, CG-PY-SQLI-001, CG-SEC-001, CG-PY-SECRET-001]}

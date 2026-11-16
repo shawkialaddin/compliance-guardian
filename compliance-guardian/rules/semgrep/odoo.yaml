@@ -1,0 +1,197 @@
+# compliance-guardian Semgrep rules for Odoo 16-20. Run locally:
+#   semgrep scan --config rules/semgrep --metrics=off <path>
+# Results are CANDIDATES: confirm in context (see `cg.py explain <CG rule>` in metadata.cg_rule).
+rules:
+  - id: odoo-sudo-browse-request-param
+    languages: [python]
+    severity: WARNING
+    message: >-
+      sudo().browse() on an id received by an HTTP route. Without an ownership/access-token check this is an
+      IDOR (any user can read/modify other records). Use _document_check_access / check_access before elevating.
+    metadata: {cg_rule: CG-ODOO-SUDO-001, cwe: ["CWE-639: Authorization Bypass Through User-Controlled Key"], owasp: ["A01:2025"], confidence: LOW, category: security}
+    patterns:
+      - pattern-inside: |
+          @http.route(...)
+          def $FUNC(..., $ARG, ...):
+            ...
+      - pattern: $MODEL.sudo().browse(<... $ARG ...>)
+      - pattern-not-inside: |
+          $SELF._document_check_access(...)
+          ...
+  - id: odoo-public-route-sudo
+    languages: [python]
+    severity: INFO
+    message: Public/unauthenticated route uses sudo(); confirm only intentionally public data is returned or modified.
+    metadata: {cg_rule: CG-ODOO-SUDO-002, cwe: ["CWE-285: Improper Authorization"], owasp: ["A01:2025"], confidence: LOW, category: security}
+    patterns:
+      - pattern-either:
+          - pattern-inside: |
+              @http.route(..., auth="public", ...)
+              def $FUNC(...):
+                ...
+          - pattern-inside: |
+              @http.route(..., auth="none", ...)
+              def $FUNC(...):
+                ...
+      - pattern: $X.sudo()
+  - id: odoo-sudo-create-write-kwargs
+    languages: [python]
+    severity: ERROR
+    message: Request kwargs passed directly to sudo().create()/write() (mass assignment). Whitelist fields.
+    metadata: {cg_rule: CG-ODOO-SUDO-003, cwe: ["CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes"], owasp: ["A01:2025"], confidence: MEDIUM, category: security}
+    patterns:
+      - pattern-inside: |
+          @http.route(...)
+          def $FUNC(..., **$KW):
+            ...
+      - pattern-either:
+          - pattern: $M.sudo().create($KW)
+          - pattern: $M.sudo().write($KW)
+          - pattern: $M.sudo().create(dict($KW))
+  - id: odoo-csrf-disabled
+    languages: [python]
+    severity: INFO
+    message: csrf=False on an HTTP route. Acceptable only for signature-verified webhooks or non-session endpoints.
+    metadata: {cg_rule: CG-ODOO-CSRF-001, cwe: ["CWE-352: Cross-Site Request Forgery (CSRF)"], owasp: ["A01:2025"], confidence: LOW, category: security}
+    patterns:
+      - pattern: |
+          @http.route(..., csrf=False, ...)
+          def $FUNC(...):
+            ...
+      - pattern-not: |
+          @http.route(..., csrf=False, ...)
+          def $FUNC(...):
+            ...
+            hmac.compare_digest(...)
+            ...
+  - id: odoo-sql-string-formatting
+    languages: [python]
+    severity: ERROR
+    message: SQL built with string formatting. Use cr.execute(query, params), psycopg2.sql or odoo.tools.SQL.
+    metadata: {cg_rule: CG-PY-SQLI-001, cwe: ["CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"], owasp: ["A05:2025"], confidence: MEDIUM, category: security}
+    patterns:
+      - pattern-either:
+          - pattern: $CR.execute($Q % $ARGS, ...)
+          - pattern: $CR.execute(f"...", ...)
+          - pattern: $CR.execute("..." + $X, ...)
+          - pattern: $CR.execute("...".format(...), ...)
+      - pattern-not: $CR.execute("..." % self._table, ...)
+      - metavariable-regex:
+          metavariable: $CR
+          regex: (.*\b_?cr|.*cursor.*)
+  - id: odoo-superuser-in-request
+    languages: [python]
+    severity: ERROR
+    message: Request handled with superuser identity. Use the authenticated env and narrow sudo() on validated records.
+    metadata: {cg_rule: CG-ODOO-AUTH-001, cwe: ["CWE-269: Improper Privilege Management"], owasp: ["A07:2025"], confidence: MEDIUM, category: security}
+    patterns:
+      - pattern-inside: |
+          @http.route(...)
+          def $FUNC(...):
+            ...
+      - pattern-either:
+          - pattern: $X.with_user(SUPERUSER_ID)
+          - pattern: request.update_env(user=SUPERUSER_ID)
+          - pattern: request.env(user=SUPERUSER_ID)
+          - pattern: api.Environment($CR, SUPERUSER_ID, ...)
+          - pattern: request.session.uid = $V
+  - id: odoo-auth-none-orm
+    languages: [python]
+    severity: WARNING
+    message: auth='none' route accesses request.env; authenticate the caller explicitly or use auth='public'/'user'.
+    metadata: {cg_rule: CG-ODOO-AUTH-002, cwe: ["CWE-306: Missing Authentication for Critical Function"], owasp: ["A07:2025"], confidence: LOW, category: security}
+    patterns:
+      - pattern-inside: |
+          @http.route(..., auth="none", ...)
+          def $FUNC(...):
+            ...
+      - pattern: request.env
+  - id: odoo-route-file-path
+    languages: [python]
+    severity: ERROR
+    message: Filesystem path built from route parameter (path traversal). Use attachments with access checks.
+    metadata: {cg_rule: CG-PY-PATH-001, cwe: ["CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"], owasp: ["A01:2025"], confidence: MEDIUM, category: security}
+    patterns:
+      - pattern-inside: |
+          @http.route(...)
+          def $FUNC(..., $ARG, ...):
+            ...
+      - pattern-either:
+          - pattern: open(<... $ARG ...>, ...)
+          - pattern: os.path.join(..., <... $ARG ...>, ...)
+          - pattern: os.remove(<... $ARG ...>)
+          - pattern: http.send_file(<... $ARG ...>, ...)
+  - id: odoo-markup-fstring
+    languages: [python]
+    severity: WARNING
+    message: Markup() over interpolated text disables escaping. Use Markup("...%s") % value.
+    metadata: {cg_rule: CG-ODOO-XSS-001, cwe: ["CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"], owasp: ["A05:2025"], confidence: MEDIUM, category: security}
+    pattern-either:
+      - pattern: Markup(f"...")
+      - pattern: Markup("..." % $X)
+      - pattern: Markup("...".format(...))
+      - pattern: Markup("..." + $X)
+  - id: odoo-html-sanitize-false
+    languages: [python]
+    severity: WARNING
+    message: Html field with sanitize=False stores raw HTML; restrict writers or keep sanitization.
+    metadata: {cg_rule: CG-ODOO-XSS-003, cwe: ["CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"], owasp: ["A05:2025"], confidence: MEDIUM, category: security}
+    pattern: fields.Html(..., sanitize=False, ...)
+  - id: odoo-qweb-t-raw
+    languages: [generic]
+    severity: WARNING
+    message: QWeb t-raw renders unescaped HTML (deprecated since 15). Use t-out.
+    metadata: {cg_rule: CG-ODOO-XSS-002, cwe: ["CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"], owasp: ["A05:2025"], confidence: MEDIUM, category: security}
+    paths: {include: ["*.xml"]}
+    pattern: t-raw="..."
+  - id: odoo-sensitive-logging
+    languages: [python]
+    severity: WARNING
+    message: Logging a value whose name suggests credentials or personal identifiers.
+    metadata: {cg_rule: CG-PY-LOG-001, cwe: ["CWE-532: Insertion of Sensitive Information into Log File"], owasp: ["A09:2025"], confidence: LOW, category: privacy}
+    patterns:
+      - pattern-either:
+          - pattern: _logger.$M(..., $V, ...)
+          - pattern: logging.$M(..., $V, ...)
+      - metavariable-regex:
+          metavariable: $V
+          regex: (?i)^[\w.]*(password|passwd|secret|token|api_?key|iban|national_?id|iqama|passport|card_?number)\w*$
+  - id: odoo-hardcoded-credential
+    languages: [python]
+    severity: ERROR
+    message: Hard-coded credential. Load from environment/secret store and rotate.
+    metadata: {cg_rule: CG-PY-SECRET-001, cwe: ["CWE-798: Use of Hard-coded Credentials"], owasp: ["A07:2025"], confidence: LOW, category: security}
+    patterns:
+      - pattern: $NAME = "$VALUE"
+      - metavariable-regex:
+          metavariable: $NAME
+          regex: (?i)^(\w*_)?(password|passwd|secret|secret_key|api_?key|access_?key|client_?secret|auth_?token|token)$
+      - metavariable-regex:
+          metavariable: $VALUE
+          regex: ^[^\s]{8,}$
+  - id: odoo-dynamic-eval
+    languages: [python]
+    severity: ERROR
+    message: eval/exec of non-literal input.
+    metadata: {cg_rule: CG-PY-EVAL-001, cwe: ["CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"], owasp: ["A05:2025"], confidence: MEDIUM, category: security}
+    patterns:
+      - pattern-either:
+          - pattern: eval($X, ...)
+          - pattern: exec($X, ...)
+      - pattern-not: eval("...", ...)
+      - pattern-not: exec("...", ...)
+  - id: odoo-unsafe-subprocess
+    languages: [python]
+    severity: ERROR
+    message: Shell command execution with dynamic input. Use an argument list without shell=True.
+    metadata: {cg_rule: CG-PY-CMDI-001, cwe: ["CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"], owasp: ["A05:2025"], confidence: MEDIUM, category: security}
+    pattern-either:
+      - patterns:
+          - pattern: subprocess.$F($CMD, ..., shell=True, ...)
+          - pattern-not: subprocess.$F("...", ..., shell=True, ...)
+      - patterns:
+          - pattern: os.system($CMD)
+          - pattern-not: os.system("...")
+      - patterns:
+          - pattern: os.popen($CMD, ...)
+          - pattern-not: os.popen("...", ...)

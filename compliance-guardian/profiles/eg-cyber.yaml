@@ -1,0 +1,7 @@
+name: eg-cyber
+description: Evaluate Egyptian Law 175/2018 and sectoral cybersecurity requirements (NTRA/ESCC, licence-dependent).
+frameworks: [eg_cyber, eng_baselines]
+config_defaults: {}
+applicability_questions:
+  - Is the organisation a 'service provider' under Law 175/2018?
+  - Does an NTRA licence or sectoral regulator impose cybersecurity requirements?

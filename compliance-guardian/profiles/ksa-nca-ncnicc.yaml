@@ -1,0 +1,7 @@
+name: ksa-nca-ncnicc
+description: Evaluate NCA NCNICC-1:2025 (non-CNI private sector). Official text Arabic only; all mappings provisional.
+frameworks: [ksa_nca_ncnicc, eng_baselines]
+config_defaults: {}
+applicability_questions:
+  - Is the entity a Saudi private-sector entity that is not a CNI operator?
+  - Which entity-size tier applies?

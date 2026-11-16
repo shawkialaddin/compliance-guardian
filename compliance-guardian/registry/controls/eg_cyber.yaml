@@ -1,0 +1,24 @@
+framework: eg_cyber
+name: Egyptian cybersecurity and cybercrime requirements (Law 175/2018; sectoral NTRA/ESCC requirements)
+kind: legal
+obligation_type: legal
+source: SRC-EG-CYBERCRIME
+controls:
+  - id: EGCYB-PROVIDER
+    reference: "Law 175/2018 - service provider obligations (articles UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Service-provider obligations (e.g. data retention, cooperation)
+    engineering_requirements:
+      - {id: EGCYB-PROV-ER1, requirement: "Determine whether the organisation is a 'service provider' under the law and which retention/cooperation duties apply; reconcile with privacy minimisation", verification: legal}
+  - id: EGCYB-SECTOR
+    reference: "NTRA / ESCC sectoral requirements (no official public framework verified)"
+    reference_status: UNVERIFIED
+    title: Sectoral cybersecurity requirements
+    engineering_requirements:
+      - {id: EGCYB-SECTOR-ER1, requirement: "Obtain applicable sectoral requirements from licence/regulator/contract", verification: legal}
+  - id: EGCYB-TECH
+    reference: "Recommended technical safeguards supporting Law 175/2018 obligations (no specific article)"
+    reference_status: UNVERIFIED
+    title: Protection of information systems (recommended)
+    engineering_requirements:
+      - {id: EGCYB-TECH-ER1, requirement: "Baseline application security controls", verification: automated_partial, rules: [CG-ODOO-SUDO-001, CG-PY-SQLI-001, CG-SEC-001, CG-ODOO-AUTH-002]}

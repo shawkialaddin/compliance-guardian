@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+# generated audit outputs / project evidence must never be committed to this repo
+compliance/
+compliance-reports/
+*.sarif
+# local/private configuration
+.env
+.env.*
+!.env.example
+*.bak-*
+.DS_Store
+.idea/
+.vscode/

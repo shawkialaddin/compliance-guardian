@@ -1,0 +1,7 @@
+name: ksa-nca-ecc
+description: Evaluate NCA ECC-2:2024. Mandatory only for in-scope entities (government, affiliates, CNI); otherwise contractual or recommended.
+frameworks: [ksa_nca_ecc, ksa_nca_dcc, eng_baselines]
+config_defaults: {}
+applicability_questions:
+  - Is the organisation (or the customer the system is delivered to) a Saudi government entity, government-affiliated company or CNI operator?
+  - Does the customer contract require ECC compliance from suppliers?

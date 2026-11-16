@@ -1,0 +1,74 @@
+framework: ksa_pdpl
+name: Saudi Personal Data Protection Law (PDPL) + Implementing Regulation + Transfer Regulation
+kind: legal
+obligation_type: legal
+source: SRC-KSA-PDPL
+# Law articles ("PDPL Art. N") and Implementing Regulation articles ("PDPL IR Art. N") are numbered separately.
+# VERIFIED = confirmed against the English translation on dgp.sdaia.gov.sa (2026-11-16); the Arabic text is binding.
+controls:
+  - id: PDPL-RIGHTS
+    reference: "PDPL Art. 4; PDPL IR Arts. 3-8; PDPL Art. 21 (response period)"
+    reference_status: VERIFIED
+    title: Data subject rights (informed, access, copy, correction, destruction)
+    engineering_requirements:
+      - {id: PDPL-RIGHTS-ER1, requirement: "Data of a data subject can be located, copied in a readable format, and corrected through an authorised path", verification: manual}
+      - {id: PDPL-RIGHTS-ER2, requirement: "Destruction path exists and respects retention required by other laws", verification: automated_partial, rules: [CG-PRIV-003]}
+      - {id: PDPL-RIGHTS-ER3, requirement: "Request handling meets the response period set by the Regulations (period to be confirmed by legal)", verification: legal}
+  - id: PDPL-CONSENT
+    reference: "PDPL Art. 5; PDPL IR Arts. 11-12"
+    reference_status: VERIFIED
+    title: Consent and withdrawal
+    engineering_requirements:
+      - {id: PDPL-CONSENT-ER1, requirement: "Where consent is the legal basis: consent capture and withdrawal are recorded and enforced", verification: manual}
+      - {id: PDPL-CONSENT-ER2, requirement: "Legal basis/exception for each purpose is determined", verification: legal}
+  - id: PDPL-RETENTION
+    reference: "PDPL Art. 18"
+    reference_status: VERIFIED
+    title: Destruction once purpose ends / retention
+    engineering_requirements:
+      - {id: PDPL-RET-ER1, requirement: "Scheduled destruction or anonymisation after purpose ends", verification: automated_partial, rules: [CG-PRIV-003]}
+  - id: PDPL-SECURITY
+    reference: "PDPL Art. 19; PDPL IR Art. 23"
+    reference_status: VERIFIED
+    title: Organisational, administrative and technical security measures
+    engineering_requirements:
+      - {id: PDPL-SEC-ER1, requirement: "Server-side authorisation; no unjustified privilege elevation", verification: automated_partial, rules: [CG-ODOO-SUDO-001, CG-ODOO-SUDO-003, CG-ODOO-SUDO-004, CG-ODOO-AUTH-001, CG-ODOO-AUTH-002, CG-ODOO-ACL-001, CG-ODOO-ACL-003, CG-ODOO-RULE-001, CG-ODOO-GROUP-001]}
+      - {id: PDPL-SEC-ER2, requirement: "Injection/unsafe execution absent", verification: automated_partial, rules: [CG-PY-SQLI-001, CG-PY-CMDI-001, CG-PY-EVAL-001, CG-PY-DESER-001, CG-PY-PATH-001, CG-PY-SSRF-001, CG-ODOO-XSS-001, CG-ODOO-XSS-002, CG-JS-XSS-001]}
+      - {id: PDPL-SEC-ER3, requirement: "No credentials in source/config", verification: automated_full, rules: [CG-SEC-001, CG-SEC-002, CG-SEC-003, CG-PY-SECRET-001, CG-IAC-DOCKER-002, CG-ODOO-CONF-001]}
+      - {id: PDPL-SEC-ER4, requirement: "Sensitive data restricted to authorised roles; no sensitive values in logs/chatter", verification: automated_partial, rules: [CG-PRIV-001, CG-ODOO-PRIV-002, CG-PY-LOG-001]}
+  - id: PDPL-BREACH
+    reference: "PDPL Art. 20; PDPL IR Art. 24"
+    reference_status: VERIFIED
+    title: Breach notification (Competent Authority within 72 hours where the incident potentially causes harm - IR Art. 24(1); data subjects without undue delay)
+    engineering_requirements:
+      - {id: PDPL-BREACH-ER1, requirement: "Detection, logging and escalation runbook allow notification within the IR Art. 24 timeline", verification: manual}
+  - id: PDPL-IMPACT
+    reference: "PDPL IR Art. 25"
+    reference_status: VERIFIED
+    title: Impact assessment
+    engineering_requirements:
+      - {id: PDPL-IMPACT-ER1, requirement: "Need for an impact assessment is determined for the processing", verification: legal}
+  - id: PDPL-TRANSFER
+    reference: "PDPL Art. 29; Regulation on Personal Data Transfer outside the Kingdom (v2.0, Aug 2024)"
+    reference_status: VERIFIED
+    title: Transfer or disclosure outside the Kingdom
+    engineering_requirements:
+      - {id: PDPL-TRANSFER-ER1, requirement: "Hosting/backup/subprocessor/API destinations outside KSA are inventoried with the applicable transfer basis", verification: legal, rules: [CG-PRIV-005]}
+  - id: PDPL-ROPA
+    reference: "PDPL Art. 31; PDPL IR Art. 33"
+    reference_status: VERIFIED
+    title: Records of processing activities (retained for the processing period plus five years per IR Art. 33)
+    engineering_requirements:
+      - {id: PDPL-ROPA-ER1, requirement: "Personal-data inventory reconciled with the written processing record", verification: manual}
+  - id: PDPL-DPO
+    reference: "PDPL Art. 30(2); PDPL IR Art. 32"
+    reference_status: VERIFIED
+    title: Personal data protection officer
+    engineering_requirements:
+      - {id: PDPL-DPO-ER1, requirement: "Whether a DPO is mandatory is determined", verification: legal}
+  - id: PDPL-SENSITIVE
+    reference: "PDPL Art. 1 (definitions: sensitive data)"
+    reference_status: UNVERIFIED
+    title: Sensitive data classification
+    engineering_requirements:
+      - {id: PDPL-SENS-ER1, requirement: "Fields holding sensitive data (as defined by the PDPL) are identified and classified", verification: legal, rules: [CG-PRIV-001]}

@@ -1,0 +1,97 @@
+framework: eu_gdpr
+name: EU General Data Protection Regulation
+kind: legal
+obligation_type: legal          # applicability is a legal determination (Art. 3); see applicability engine
+source: SRC-EU-GDPR
+# reference_status: VERIFIED = article number/title confirmed against EUR-Lex on 2026-11-16.
+# Paragraph letters cited (e.g. 5(1)(c)) are standard; engineering requirements are interpretations, not legal text.
+controls:
+  - id: GDPR-ART5
+    reference: "Art. 5(1)(c),(e),(f)"
+    reference_status: VERIFIED
+    title: Principles - data minimisation, storage limitation, integrity and confidentiality
+    engineering_requirements:
+      - {id: GDPR-ART5-ER1, requirement: "Every personal-data field has a documented purpose; unnecessary fields are not collected", verification: manual}
+      - {id: GDPR-ART5-ER2, requirement: "Retention periods are enforced by scheduled deletion/anonymisation that respects legal retention", verification: automated_partial, rules: [CG-PRIV-003, CG-ODOO-HOOK-001]}
+  - id: GDPR-ART6
+    reference: "Art. 6"
+    reference_status: VERIFIED
+    title: Lawfulness of processing
+    engineering_requirements:
+      - {id: GDPR-ART6-ER1, requirement: "A lawful basis is documented for each processing purpose", verification: legal}
+  - id: GDPR-ART7
+    reference: "Art. 7"
+    reference_status: VERIFIED
+    title: Conditions for consent
+    engineering_requirements:
+      - {id: GDPR-ART7-ER1, requirement: "Where consent is the lawful basis: consent is recorded (who/when/what text), granular, and withdrawable as easily as given", verification: manual}
+  - id: GDPR-ART9
+    reference: "Art. 9"
+    reference_status: VERIFIED
+    title: Processing of special categories of personal data
+    engineering_requirements:
+      - {id: GDPR-ART9-ER1, requirement: "Special-category fields are restricted to authorised groups (field-level groups / ACL / record rules)", verification: automated_partial, rules: [CG-PRIV-001, CG-ODOO-PRIV-002, CG-ODOO-VIEW-001]}
+      - {id: GDPR-ART9-ER2, requirement: "An Art. 9(2) condition is documented for each special category processed", verification: legal}
+  - id: GDPR-ART12-14
+    reference: "Arts. 12, 13, 14"
+    reference_status: VERIFIED
+    title: Transparency and information to data subjects
+    engineering_requirements:
+      - {id: GDPR-ART13-ER1, requirement: "Privacy notice is presented/linked at every collection point (website forms, portal, apps)", verification: manual}
+  - id: GDPR-ART15-20
+    reference: "Arts. 15, 16, 17, 18, 20, 21"
+    reference_status: VERIFIED
+    title: Data subject rights (access, rectification, erasure, restriction, portability, objection)
+    engineering_requirements:
+      - {id: GDPR-DSR-ER1, requirement: "Personal data of a data subject can be located and exported in a structured, machine-readable format", verification: manual}
+      - {id: GDPR-DSR-ER2, requirement: "Erasure/anonymisation path exists and documents retention exceptions (e.g. accounting records) - erasure is not unconditional", verification: automated_partial, rules: [CG-PRIV-003]}
+      - {id: GDPR-DSR-ER3, requirement: "Restriction/objection flags can stop processing for marketing and other purposes", verification: manual}
+  - id: GDPR-ART25
+    reference: "Art. 25"
+    reference_status: VERIFIED
+    title: Data protection by design and by default
+    engineering_requirements:
+      - {id: GDPR-ART25-ER1, requirement: "Deny-by-default access: no global/portal over-broad ACLs or record rules; UI hiding is not used as authorisation", verification: automated_partial, rules: [CG-ODOO-ACL-001, CG-ODOO-ACL-002, CG-ODOO-ACL-003, CG-ODOO-RULE-001, CG-ODOO-VIEW-001]}
+      - {id: GDPR-ART25-ER2, requirement: "Public endpoints expose only explicitly public fields/records", verification: automated_partial, rules: [CG-ODOO-SUDO-002, CG-ODOO-INFO-001]}
+  - id: GDPR-ART28
+    reference: "Art. 28"
+    reference_status: VERIFIED
+    title: Processor obligations
+    engineering_requirements:
+      - {id: GDPR-ART28-ER1, requirement: "Subprocessors (SaaS, hosting, email, payment, AI APIs) are inventoried with DPAs", verification: legal}
+  - id: GDPR-ART30
+    reference: "Art. 30"
+    reference_status: VERIFIED
+    title: Records of processing activities
+    engineering_requirements:
+      - {id: GDPR-ART30-ER1, requirement: "Personal-data inventory (privacy-assessment.md) is reconciled with the RoPA", verification: manual}
+  - id: GDPR-ART32
+    reference: "Art. 32"
+    reference_status: VERIFIED
+    title: Security of processing
+    engineering_requirements:
+      - {id: GDPR-ART32-ER1, requirement: "Object- and function-level authorisation enforced server-side; no unjustified privilege elevation", verification: automated_partial, rules: [CG-ODOO-SUDO-001, CG-ODOO-SUDO-003, CG-ODOO-SUDO-004, CG-ODOO-AUTH-001, CG-ODOO-AUTH-002, CG-ODOO-GROUP-001, CG-ODOO-ACL-001, CG-ODOO-ACL-003, CG-ODOO-RULE-001, CG-ODOO-CSRF-001, CG-PY-CSRF-002]}
+      - {id: GDPR-ART32-ER2, requirement: "Injection and unsafe-execution weaknesses absent (SQL, command, code eval, deserialisation, path, SSRF, XSS)", verification: automated_partial, rules: [CG-PY-SQLI-001, CG-PY-CMDI-001, CG-PY-EVAL-001, CG-PY-EVAL-002, CG-PY-DESER-001, CG-PY-PATH-001, CG-PY-SSRF-001, CG-ODOO-XSS-001, CG-ODOO-XSS-002, CG-ODOO-XSS-003, CG-JS-XSS-001, CG-JS-EVAL-001, "EXT-semgrep-*", "EXT-bandit-*"]}
+      - {id: GDPR-ART32-ER3, requirement: "No credentials in source, images or tracked config", verification: automated_full, rules: [CG-SEC-001, CG-SEC-002, CG-SEC-003, CG-PY-SECRET-001, CG-IAC-DOCKER-002, CG-ODOO-CONF-001, "EXT-gitleaks-*", "EXT-detect-secrets-*"]}
+      - {id: GDPR-ART32-ER4, requirement: "Transport encryption verified; strong cryptographic primitives and CSPRNG for secrets", verification: automated_partial, rules: [CG-PY-TLS-001, CG-JS-TLS-001, CG-PY-CRYPTO-001, CG-PY-CRYPTO-002, CG-PY-JWT-001]}
+      - {id: GDPR-ART32-ER5, requirement: "Logs exclude credentials and unnecessary personal data", verification: automated_partial, rules: [CG-PY-LOG-001]}
+      - {id: GDPR-ART32-ER6, requirement: "Backups, restore testing, encryption at rest and availability measures are evidenced", verification: manual}
+      - {id: GDPR-ART32-ER7, requirement: "Known-vulnerable dependencies are identified and remediated", verification: automated_partial, rules: ["EXT-pip-audit-*", "EXT-trivy-*", CG-IAC-DOCKER-003]}
+  - id: GDPR-ART33-34
+    reference: "Arts. 33, 34"
+    reference_status: VERIFIED
+    title: Personal data breach notification and communication
+    engineering_requirements:
+      - {id: GDPR-ART33-ER1, requirement: "Security-relevant events are logged and alerting allows awareness and assessment in time for the 72-hour supervisory-authority notification under Art. 33(1)", verification: manual}
+  - id: GDPR-ART35
+    reference: "Art. 35"
+    reference_status: VERIFIED
+    title: Data protection impact assessment
+    engineering_requirements:
+      - {id: GDPR-ART35-ER1, requirement: "DPIA necessity is assessed for features processing special categories, large-scale monitoring or new technologies", verification: legal}
+  - id: GDPR-CH5
+    reference: "Arts. 44-49"
+    reference_status: VERIFIED
+    title: Transfers to third countries
+    engineering_requirements:
+      - {id: GDPR-CH5-ER1, requirement: "Hosting, backup, subprocessor and API destinations outside the EEA are inventoried with a transfer mechanism", verification: legal, rules: [CG-PRIV-005]}

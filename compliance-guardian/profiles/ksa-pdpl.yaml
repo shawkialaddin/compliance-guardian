@@ -1,0 +1,8 @@
+name: ksa-pdpl
+description: Evaluate Saudi PDPL, Implementing Regulation and Transfer Regulation controls.
+frameworks: [ksa_pdpl, eng_baselines]
+config_defaults: {}
+applicability_questions:
+  - Is personal data of individuals residing in KSA processed (inside or outside the Kingdom)?
+  - Is any personal data transferred or disclosed outside KSA (hosting, backups, SaaS, support access)?
+  - Is a DPO required under PDPL IR Art. 32?

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="patient_portal_rule" model="ir.rule">
+        <field name="name">Portal sees own patient record</field>
+        <field name="model_id" ref="model_clinic_patient"/>
+        <field name="domain_force">[('partner_id', 'child_of', [user.commercial_partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+    <record id="patient_company_rule" model="ir.rule">
+        <field name="name">Patient multi-company</field>
+        <field name="model_id" ref="model_clinic_patient"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

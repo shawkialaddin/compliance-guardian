@@ -1,0 +1,8 @@
+# compliance/evidence.yaml - human-reviewed evidence for manual/legal requirements in the matrix.
+# A record is accepted only with status, evidence refs, reviewer and date.
+controls:
+  - requirement: GDPR-ART32-ER6
+    status: PASS                  # PASS | FAIL | PARTIAL | NOT_APPLICABLE
+    evidence: ["Backup restore test report 2026-10-02 (link)", "Encrypted volume config (ticket OPS-77)"]
+    reviewer: "Ops lead"
+    date: "2026-10-03"

@@ -1,0 +1,38 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  selftest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-python@v5
+        with: {python-version: "${{ matrix.python }}"}
+      - run: python -m pip install "pyyaml==6.0.2" "jsonschema==4.23.0" "pytest==8.3.3"
+      - name: Self-test suite
+        run: python -m pytest compliance-guardian/tests -q
+      - name: Dogfood scan (fixtures excluded; fail on HIGH+)
+        run: python compliance-guardian/scripts/cg.py scan . --fail-on HIGH
+  installer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - name: Install into a throwaway CLAUDE_CONFIG_DIR and uninstall
+        run: |
+          export CLAUDE_CONFIG_DIR="$RUNNER_TEMP/claude"
+          mkdir -p "$CLAUDE_CONFIG_DIR" && echo '{}' > "$CLAUDE_CONFIG_DIR/settings.json"
+          python -m pip install -q "pyyaml==6.0.2"
+          ./install.sh
+          test -f "$CLAUDE_CONFIG_DIR/skills/compliance-guardian/SKILL.md"
+          grep -q 'compliance-guardian/scripts/cg.py' "$CLAUDE_CONFIG_DIR/settings.json"
+          ./install.sh --uninstall
+          ! grep -q 'compliance-guardian/scripts/cg.py' "$CLAUDE_CONFIG_DIR/settings.json"

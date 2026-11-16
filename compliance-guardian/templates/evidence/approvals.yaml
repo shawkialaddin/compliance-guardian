@@ -1,0 +1,11 @@
+# compliance/approvals.yaml - recorded by named humans only. The tool never creates these on its own.
+legal_reviews:
+  - framework: ksa_pdpl
+    status: approved              # approved | rejected
+    reviewer: "Counsel name"
+    date: "2026-11-10"
+    notes: "Scope + transfer basis reviewed for release 2.3"
+deployment_authorization:
+  approved_by: "Release manager name"
+  date: "2026-11-16"
+  release: "2.3.0"

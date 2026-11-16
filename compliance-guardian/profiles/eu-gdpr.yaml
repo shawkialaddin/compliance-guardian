@@ -1,0 +1,8 @@
+name: eu-gdpr
+description: Evaluate GDPR controls. Applicability (Art. 3) still requires legal determination.
+frameworks: [eu_gdpr, eng_baselines]
+config_defaults: {}
+applicability_questions:
+  - Is the organisation established in the EU/EEA (Art. 3(1))?
+  - Does it offer goods/services to, or monitor the behaviour of, data subjects in the EU (Art. 3(2))?
+  - Controller or processor for this system?

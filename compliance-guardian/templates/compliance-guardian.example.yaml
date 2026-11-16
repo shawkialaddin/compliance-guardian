@@ -1,0 +1,58 @@
+# .compliance-guardian.yaml - project compliance context for compliance-guardian
+# Record FACTS. Leave unknowns empty instead of guessing: unknown facts produce LEGAL_REVIEW_REQUIRED
+# items rather than false assumptions. Do not put secrets or personal data in this file.
+schema_version: 1
+profiles: []                      # e.g. [combined-eu-ksa-eg]; profiles focus evaluation, they do NOT declare legal applicability
+
+project:
+  name: my-odoo-addons
+  type: odoo                      # odoo | python | django | fastapi | javascript | typescript | flutter | infrastructure | mixed
+  odoo_version: "17.0"            # 16.0 - 20.0
+  edition: community
+
+organization:
+  industry: retail                # free text; e.g. healthcare, finance, telecom, government
+  classification: [private]       # private | government | government_affiliated | cni | unknown
+  cloud_role: none                # none | provider | tenant | unknown
+  size: medium
+
+processing_role: [processor]      # controller | processor | joint_controller | subprocessor
+processing_countries: [SA]        # where processing/operations take place (ISO alpha-2)
+customer_countries: [SA, EG]
+data_subject_locations: [SA, EG, DE]
+personal_data_categories: [contact, identifiers, financial]
+sensitive_data_categories: []     # e.g. [health] - legal classification to be confirmed
+
+hosting: {country: SA, provider: example-cloud, region: riyadh}
+backup_countries: [SA]
+subprocessors:
+  - {name: transactional-email-provider, purpose: email delivery, countries: [IE], dpa: true}
+transfer_destinations: []
+
+# Recorded determinations (by counsel/DPO). Without these, frameworks are only "INDICATED" and need legal review.
+regulatory_requirements: []
+#  - {framework: ksa_pdpl, status: applicable, basis: "Processing of KSA residents' data", determined_by: "DPO name", determined_on: "2026-01-15"}
+contractual_requirements: []      # e.g. [eng_baselines] when a customer contract requires OWASP ASVS
+
+risk_tolerance: low
+
+release_gates:                    # defaults shown
+  block_confirmed: [CRITICAL, HIGH]
+  exception_allowed: [HIGH, MEDIUM, LOW]
+  block_untriaged: [CRITICAL, HIGH]
+  require_risk_decision: [MEDIUM]
+
+approved_exceptions: []
+#  - id: EXC-2026-001
+#    fingerprint: 0123456789abcdef
+#    justification: "Public price list endpoint intentionally exposes published products only"
+#    compensating_controls: "Domain restricted to website_published; field whitelist"
+#    approved_by: "Security lead name"
+#    approved_on: "2026-11-01"
+#    expires_on: "2027-05-01"
+#    ticket: SEC-123
+
+scan:
+  exclude: ["**/tests/fixtures/**"]
+  post_edit_hook: true
+  hook_min_severity: MEDIUM

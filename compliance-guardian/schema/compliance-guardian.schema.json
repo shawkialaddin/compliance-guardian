@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/compliance-guardian/schema/compliance-guardian.schema.json",
+  "title": ".compliance-guardian.yaml",
+  "type": "object",
+  "required": ["schema_version"],
+  "additionalProperties": false,
+  "$defs": {
+    "country": {"type": "string", "pattern": "^([A-Z]{2}|EU)$", "description": "ISO 3166-1 alpha-2 code (or EU)"},
+    "countries": {"type": "array", "items": {"$ref": "#/$defs/country"}, "uniqueItems": true},
+    "framework": {"type": "string", "enum": ["eu_gdpr", "ksa_pdpl", "ksa_nca_ecc", "ksa_nca_ccc", "ksa_nca_dcc", "ksa_nca_ncnicc", "eg_pdpl", "eg_cyber", "eng_baselines"]},
+    "severity": {"type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"]},
+    "date": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"}
+  },
+  "properties": {
+    "schema_version": {"const": 1},
+    "profiles": {"type": "array", "items": {"type": "string", "enum": ["eu-gdpr", "ksa-pdpl", "ksa-nca-ecc", "ksa-nca-ccc", "ksa-nca-ncnicc", "eg-pdpl", "eg-cyber", "combined-eu-ksa-eg"]}},
+    "project": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string"},
+        "type": {"type": "string", "enum": ["odoo", "python", "django", "fastapi", "javascript", "typescript", "flutter", "infrastructure", "mixed"]},
+        "odoo_version": {"type": ["string", "number", "null"], "pattern": "^(1[6-9]|20)(\\.0)?$"},
+        "edition": {"type": "string", "enum": ["community", "enterprise", "unknown"]}
+      }
+    },
+    "organization": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "industry": {"type": "string"},
+        "classification": {"type": "array", "items": {"type": "string", "enum": ["private", "government", "government_affiliated", "cni", "unknown"]}},
+        "cloud_role": {"type": "string", "enum": ["none", "provider", "tenant", "unknown"]},
+        "size": {"type": "string", "enum": ["micro", "small", "medium", "large", "unknown"]}
+      }
+    },
+    "processing_role": {"type": "array", "items": {"type": "string", "enum": ["controller", "processor", "joint_controller", "subprocessor", "unknown"]}},
+    "processing_countries": {"$ref": "#/$defs/countries"},
+    "customer_countries": {"$ref": "#/$defs/countries"},
+    "data_subject_locations": {"$ref": "#/$defs/countries"},
+    "personal_data_categories": {"type": "array", "items": {"type": "string"}},
+    "sensitive_data_categories": {"type": "array", "items": {"type": "string"}},
+    "hosting": {"type": "object", "additionalProperties": false, "properties": {"country": {"$ref": "#/$defs/country"}, "provider": {"type": "string"}, "region": {"type": "string"}}},
+    "backup_countries": {"$ref": "#/$defs/countries"},
+    "subprocessors": {"type": "array", "items": {"type": "object", "required": ["name"], "additionalProperties": false, "properties": {"name": {"type": "string"}, "purpose": {"type": "string"}, "countries": {"$ref": "#/$defs/countries"}, "dpa": {"type": "boolean"}}}},
+    "transfer_destinations": {"type": "array", "items": {"anyOf": [{"$ref": "#/$defs/country"}, {"type": "object", "required": ["country"], "properties": {"country": {"$ref": "#/$defs/country"}, "mechanism": {"type": "string"}, "purpose": {"type": "string"}}}]}},
+    "regulatory_requirements": {
+      "type": "array",
+      "description": "Recorded applicability determinations. 'applicable'/'not_applicable' must name who determined it and when.",
+      "items": {"type": "object", "required": ["framework", "status"], "additionalProperties": false, "properties": {
+        "framework": {"$ref": "#/$defs/framework"},
+        "status": {"type": "string", "enum": ["applicable", "not_applicable", "contractual", "under_review"]},
+        "basis": {"type": "string"}, "determined_by": {"type": "string"}, "determined_on": {"$ref": "#/$defs/date"}}}
+    },
+    "contractual_requirements": {"type": "array", "items": {"anyOf": [{"$ref": "#/$defs/framework"}, {"type": "object", "required": ["framework"], "properties": {"framework": {"$ref": "#/$defs/framework"}, "contract": {"type": "string"}, "notes": {"type": "string"}}}]}},
+    "risk_tolerance": {"type": "string", "enum": ["low", "medium", "high"]},
+    "release_gates": {"type": "object", "additionalProperties": false, "properties": {
+      "block_confirmed": {"type": "array", "items": {"$ref": "#/$defs/severity"}},
+      "exception_allowed": {"type": "array", "items": {"$ref": "#/$defs/severity"}},
+      "block_untriaged": {"type": "array", "items": {"$ref": "#/$defs/severity"}},
+      "require_risk_decision": {"type": "array", "items": {"$ref": "#/$defs/severity"}},
+      "record_only": {"type": "array", "items": {"$ref": "#/$defs/severity"}}}},
+    "approved_exceptions": {"type": "array", "items": {"type": "object", "required": ["id", "justification", "approved_by", "approved_on", "expires_on"], "additionalProperties": false, "properties": {
+      "id": {"type": "string", "pattern": "^EXC-"}, "fingerprint": {"type": "string"}, "rule_id": {"type": "string"}, "path": {"type": "string"},
+      "justification": {"type": "string", "minLength": 10}, "compensating_controls": {"type": "string"},
+      "approved_by": {"type": "string"}, "approved_on": {"$ref": "#/$defs/date"}, "expires_on": {"$ref": "#/$defs/date"}, "ticket": {"type": "string"}}}},
+    "scan": {"type": "object", "additionalProperties": false, "properties": {
+      "exclude": {"type": "array", "items": {"type": "string"}},
+      "post_edit_hook": {"type": "boolean"},
+      "hook_min_severity": {"$ref": "#/$defs/severity"}}}
+  }
+}

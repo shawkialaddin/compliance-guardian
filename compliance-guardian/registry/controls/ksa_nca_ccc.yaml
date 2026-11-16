@@ -1,0 +1,31 @@
+framework: ksa_nca_ccc
+name: NCA Cloud Cybersecurity Controls (CCC-2:2024)
+kind: legal
+obligation_type: legal
+source: SRC-KSA-NCA-CCC
+# Control numbering NOT extracted from the official document -> every reference UNVERIFIED.
+controls:
+  - id: CCC-IAM
+    reference: "CCC-2:2024 (identity and access controls; control number UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Cloud identity and access management
+    engineering_requirements:
+      - {id: CCC-IAM-ER1, requirement: "Tenant isolation and least privilege in application and infrastructure access", verification: automated_partial, rules: [CG-ODOO-RULE-002, CG-ODOO-SUDO-001, CG-IAC-COMPOSE-001, "EXT-checkov-*"]}
+  - id: CCC-DATA
+    reference: "CCC-2:2024 (data protection / data location; control number UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Cloud data protection and location
+    engineering_requirements:
+      - {id: CCC-DATA-ER1, requirement: "Data hosting/backup location requirements determined for the classification level", verification: legal, rules: [CG-PRIV-005]}
+  - id: CCC-CRYPTO
+    reference: "CCC-2:2024 (cryptography; control number UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Encryption in transit and at rest
+    engineering_requirements:
+      - {id: CCC-CRYPTO-ER1, requirement: "TLS verification enabled; secrets not in images", verification: automated_partial, rules: [CG-PY-TLS-001, CG-JS-TLS-001, CG-IAC-DOCKER-002]}
+  - id: CCC-LOG
+    reference: "CCC-2:2024 (event logs and monitoring; control number UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Cloud logging and monitoring
+    engineering_requirements:
+      - {id: CCC-LOG-ER1, requirement: "Cloud and application security logs collected and retained per CCC", verification: manual}

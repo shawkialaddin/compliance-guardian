@@ -1,0 +1,10 @@
+name: combined-eu-ksa-eg
+description: >
+  Evaluate EU, KSA and Egypt frameworks side by side. Each framework is assessed on its own terms;
+  the most restrictive regime does NOT automatically determine every requirement.
+frameworks: [eu_gdpr, ksa_pdpl, ksa_nca_ecc, ksa_nca_ncnicc, eg_pdpl, eg_cyber, eng_baselines]
+config_defaults: {}
+applicability_questions:
+  - For each jurisdiction, which entity is controller/processor?
+  - Where are data hosted, backed up and supported from (transfer analysis per law)?
+  - Are there conflicting retention requirements (e.g. Egyptian service-provider retention vs. minimisation)?

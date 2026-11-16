@@ -1,0 +1,54 @@
+rules:
+  - id: py-unsafe-deserialization
+    languages: [python]
+    severity: ERROR
+    message: Unsafe deserialization. Use json or yaml.safe_load.
+    metadata: {cg_rule: CG-PY-DESER-001, cwe: ["CWE-502: Deserialization of Untrusted Data"], owasp: ["A08:2025"], confidence: MEDIUM, category: security}
+    pattern-either:
+      - pattern: pickle.loads(...)
+      - pattern: pickle.load(...)
+      - pattern: marshal.loads(...)
+      - pattern: yaml.unsafe_load(...)
+      - patterns:
+          - pattern: yaml.load(...)
+          - pattern-not: yaml.load(..., Loader=yaml.SafeLoader, ...)
+          - pattern-not: yaml.load(..., Loader=yaml.CSafeLoader, ...)
+  - id: py-tls-verify-disabled
+    languages: [python]
+    severity: WARNING
+    message: TLS certificate verification disabled.
+    metadata: {cg_rule: CG-PY-TLS-001, cwe: ["CWE-295: Improper Certificate Validation"], owasp: ["A04:2025"], confidence: HIGH, category: security}
+    pattern: requests.$M(..., verify=False, ...)
+  - id: py-jwt-no-verify
+    languages: [python]
+    severity: ERROR
+    message: JWT decoded without signature verification.
+    metadata: {cg_rule: CG-PY-JWT-001, cwe: ["CWE-347: Improper Verification of Cryptographic Signature"], owasp: ["A07:2025"], confidence: HIGH, category: security}
+    pattern-either:
+      - pattern: |
+          jwt.decode(..., options={..., "verify_signature": False, ...}, ...)
+      - pattern: jwt.decode(..., verify=False, ...)
+  - id: py-django-mark-safe-dynamic
+    languages: [python]
+    severity: WARNING
+    message: mark_safe on dynamic content; use format_html.
+    metadata: {cg_rule: CG-PY-XSS-001, cwe: ["CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"], owasp: ["A05:2025"], confidence: MEDIUM, category: security}
+    patterns:
+      - pattern: mark_safe($X)
+      - pattern-not: mark_safe("...")
+  - id: py-cors-wildcard-credentials
+    languages: [python]
+    severity: ERROR
+    message: CORS allows any origin with credentials.
+    metadata: {cg_rule: CG-PY-CORS-001, cwe: ["CWE-942: Permissive Cross-domain Policy with Untrusted Domains"], owasp: ["A02:2025"], confidence: HIGH, category: security}
+    pattern: $APP.add_middleware(CORSMiddleware, ..., allow_origins=["*"], ..., allow_credentials=True, ...)
+  - id: py-insecure-random-token
+    languages: [python]
+    severity: WARNING
+    message: random module used for a security token; use secrets.
+    metadata: {cg_rule: CG-PY-CRYPTO-002, cwe: ["CWE-338: Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)"], owasp: ["A04:2025"], confidence: MEDIUM, category: security}
+    patterns:
+      - pattern: $TOKEN = <... random.$F(...) ...>
+      - metavariable-regex:
+          metavariable: $TOKEN
+          regex: (?i).*(token|otp|password|secret|nonce|salt).*

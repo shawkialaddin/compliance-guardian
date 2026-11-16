@@ -1,0 +1,51 @@
+framework: eng_baselines
+name: Engineering security baselines (OWASP Top 10:2025, OWASP API Top 10:2023, ASVS 5.0, CWE Top 25 2025, NIST SSDF 1.1)
+kind: baseline
+obligation_type: best_practice   # becomes contractual when listed in contractual_requirements
+source: SRC-OWASP-TOP10
+# OWASP Top 10:2025 category IDs/titles VERIFIED (top10.owasp.org/2025, 2026-11-16).
+# Rule -> category assignment is engineering judgement. API Top 10 / SSDF item titles not re-fetched -> UNVERIFIED.
+controls:
+  - {id: OWASP25-A01, reference: "OWASP Top 10:2025 A01 Broken Access Control", reference_status: VERIFIED, title: Broken Access Control,
+     engineering_requirements: [{id: OWASP25-A01-ER1, requirement: "Object/function-level authorisation, CSRF, CORS and SSRF weaknesses absent", verification: automated_partial,
+       rules: [CG-ODOO-SUDO-001, CG-ODOO-SUDO-002, CG-ODOO-SUDO-003, CG-ODOO-SUDO-004, CG-ODOO-ACL-001, CG-ODOO-ACL-002, CG-ODOO-ACL-003, CG-ODOO-RULE-001, CG-ODOO-GROUP-001, CG-ODOO-CSRF-001, CG-ODOO-CORS-001, CG-PY-PATH-001, CG-PY-SSRF-001, CG-PY-CSRF-002]}]}
+  - {id: OWASP25-A02, reference: "OWASP Top 10:2025 A02 Security Misconfiguration", reference_status: VERIFIED, title: Security Misconfiguration,
+     engineering_requirements: [{id: OWASP25-A02-ER1, requirement: "Debug, DB manager, CORS, container and CI misconfigurations absent", verification: automated_partial,
+       rules: [CG-ODOO-CONF-002, CG-ODOO-CONF-003, CG-PY-DJANGO-001, CG-PY-DEBUG-001, CG-PY-CORS-001, CG-JS-CORS-001, CG-IAC-DOCKER-001, CG-IAC-COMPOSE-001, CG-IAC-COMPOSE-002, "EXT-checkov-*"]}]}
+  - {id: OWASP25-A03, reference: "OWASP Top 10:2025 A03 Software Supply Chain Failures", reference_status: VERIFIED, title: Software Supply Chain Failures,
+     engineering_requirements: [{id: OWASP25-A03-ER1, requirement: "Dependencies/images free of known vulnerabilities; pinned base images; CI workflows not injectable", verification: automated_partial,
+       rules: ["EXT-pip-audit-*", "EXT-trivy-*", CG-IAC-DOCKER-003, CG-IAC-DOCKER-004, CG-CI-001, CG-CI-002]}]}
+  - {id: OWASP25-A04, reference: "OWASP Top 10:2025 A04 Cryptographic Failures", reference_status: VERIFIED, title: Cryptographic Failures,
+     engineering_requirements: [{id: OWASP25-A04-ER1, requirement: "TLS verified, strong hashes/CSPRNG, constant-time secret comparison", verification: automated_partial,
+       rules: [CG-PY-TLS-001, CG-JS-TLS-001, CG-PY-CRYPTO-001, CG-PY-CRYPTO-002, CG-PY-TIMING-001, CG-JS-STORAGE-001]}]}
+  - {id: OWASP25-A05, reference: "OWASP Top 10:2025 A05 Injection", reference_status: VERIFIED, title: Injection,
+     engineering_requirements: [{id: OWASP25-A05-ER1, requirement: "SQL/command/code injection and XSS absent", verification: automated_partial,
+       rules: [CG-PY-SQLI-001, CG-PY-CMDI-001, CG-PY-EVAL-001, CG-PY-EVAL-002, CG-ODOO-XSS-001, CG-ODOO-XSS-002, CG-ODOO-XSS-003, CG-PY-XSS-001, CG-JS-XSS-001, CG-JS-XSS-002, CG-JS-EVAL-001, "EXT-semgrep-*", "EXT-bandit-*"]}]}
+  - {id: OWASP25-A06, reference: "OWASP Top 10:2025 A06 Insecure Design", reference_status: VERIFIED, title: Insecure Design,
+     engineering_requirements: [{id: OWASP25-A06-ER1, requirement: "Threat model / pre-development security review recorded for the feature", verification: manual},
+                                {id: OWASP25-A06-ER2, requirement: "Upload validation and rate limiting designed in", verification: automated_partial, rules: [CG-ODOO-UPLOAD-001, CG-ODOO-RATE-001]}]}
+  - {id: OWASP25-A07, reference: "OWASP Top 10:2025 A07 Authentication Failures", reference_status: VERIFIED, title: Authentication Failures,
+     engineering_requirements: [{id: OWASP25-A07-ER1, requirement: "No auth bypass, hard-coded credentials or unverified tokens", verification: automated_partial,
+       rules: [CG-ODOO-AUTH-001, CG-ODOO-AUTH-002, CG-PY-SECRET-001, CG-SEC-001, CG-SEC-002, CG-PY-JWT-001, CG-ODOO-CONF-001]}]}
+  - {id: OWASP25-A08, reference: "OWASP Top 10:2025 A08 Software or Data Integrity Failures", reference_status: VERIFIED, title: Software or Data Integrity Failures,
+     engineering_requirements: [{id: OWASP25-A08-ER1, requirement: "No unsafe deserialisation or unverified remote code during build", verification: automated_partial, rules: [CG-PY-DESER-001, CG-IAC-DOCKER-004]}]}
+  - {id: OWASP25-A09, reference: "OWASP Top 10:2025 A09 Security Logging and Alerting Failures", reference_status: VERIFIED, title: Security Logging and Alerting Failures,
+     engineering_requirements: [{id: OWASP25-A09-ER1, requirement: "Security events logged and alerted; logs free of secrets/personal data", verification: automated_partial, rules: [CG-PY-LOG-001]},
+                                {id: OWASP25-A09-ER2, requirement: "Alerting on authentication anomalies and privilege changes exists", verification: manual}]}
+  - {id: OWASP25-A10, reference: "OWASP Top 10:2025 A10 Mishandling of Exceptional Conditions", reference_status: VERIFIED, title: Mishandling of Exceptional Conditions,
+     engineering_requirements: [{id: OWASP25-A10-ER1, requirement: "Errors fail closed and do not leak details; outbound calls have timeouts", verification: automated_partial, rules: [CG-ODOO-INFO-001, CG-PY-TIMEOUT-001]}]}
+  - {id: API23-API1, reference: "OWASP API Security Top 10:2023 API1 (Broken Object Level Authorization)", reference_status: UNVERIFIED, title: Object-level authorization,
+     engineering_requirements: [{id: API23-API1-ER1, requirement: "Every endpoint taking an object id enforces ownership/ACL", verification: automated_partial, rules: [CG-ODOO-SUDO-001, CG-ODOO-RULE-001]}]}
+  - {id: API23-API3, reference: "OWASP API Security Top 10:2023 API3 (Broken Object Property Level Authorization)", reference_status: UNVERIFIED, title: Property-level authorization,
+     engineering_requirements: [{id: API23-API3-ER1, requirement: "No mass assignment; responses limited to permitted fields", verification: automated_partial, rules: [CG-ODOO-SUDO-003, CG-ODOO-SUDO-002]}]}
+  - {id: API23-API4, reference: "OWASP API Security Top 10:2023 API4 (Unrestricted Resource Consumption)", reference_status: UNVERIFIED, title: Resource consumption,
+     engineering_requirements: [{id: API23-API4-ER1, requirement: "Rate limits, upload size limits and timeouts", verification: automated_partial, rules: [CG-ODOO-RATE-001, CG-ODOO-UPLOAD-001, CG-PY-TIMEOUT-001]}]}
+  - {id: CWE25-2025, reference: "CWE Top 25 (2025)", reference_status: VERIFIED, title: Most dangerous software weaknesses,
+     engineering_requirements: [{id: CWE25-ER1, requirement: "Statically detectable Top-25 weakness classes (CWE-79, 89, 78, 22, 352, 434, 502, 918, 798, 287, 862/863-type authz) absent", verification: automated_partial,
+       rules: [CG-ODOO-XSS-001, CG-ODOO-XSS-002, CG-PY-SQLI-001, CG-PY-CMDI-001, CG-PY-PATH-001, CG-ODOO-CSRF-001, CG-ODOO-UPLOAD-001, CG-PY-DESER-001, CG-PY-SSRF-001, CG-PY-SECRET-001, CG-ODOO-AUTH-002, CG-ODOO-SUDO-001]}]}
+  - {id: SSDF-PW7, reference: "NIST SP 800-218 v1.1 PW.7 (review/analyze code)", reference_status: UNVERIFIED, title: Code review and analysis,
+     engineering_requirements: [{id: SSDF-PW7-ER1, requirement: "Changed code reviewed with automated analysis before merge (hook/CI evidence)", verification: manual}]}
+  - {id: SSDF-PW8, reference: "NIST SP 800-218 v1.1 PW.8 (test executable code)", reference_status: UNVERIFIED, title: Security testing,
+     engineering_requirements: [{id: SSDF-PW8-ER1, requirement: "Security regression tests exist for fixed vulnerabilities and authorization boundaries", verification: manual}]}
+  - {id: SSDF-RV1, reference: "NIST SP 800-218 v1.1 RV.1 (identify and confirm vulnerabilities)", reference_status: UNVERIFIED, title: Vulnerability identification,
+     engineering_requirements: [{id: SSDF-RV1-ER1, requirement: "Findings triaged (confirmed/false positive) with rationale", verification: manual}]}

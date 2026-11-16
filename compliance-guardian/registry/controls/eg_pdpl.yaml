@@ -1,0 +1,53 @@
+framework: eg_pdpl
+name: Egyptian Personal Data Protection Law No. 151 of 2020 + Executive Regulations (Decision 816/2025)
+kind: legal
+obligation_type: legal
+source: SRC-EG-PDPL
+# Official Arabic texts could not be retrieved automatically. ALL article references are UNVERIFIED and must be
+# confirmed against the Official Gazette before citation. Topics are listed without article numbers deliberately.
+controls:
+  - id: EGPDPL-LAWFUL
+    reference: "Law 151/2020 - lawful processing conditions and consent (article UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Lawful processing and consent
+    engineering_requirements:
+      - {id: EGPDPL-LAWFUL-ER1, requirement: "Legal basis / consent requirement determined per purpose; consent records kept where consent is required", verification: legal}
+  - id: EGPDPL-RIGHTS
+    reference: "Law 151/2020 - data subject rights (article UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Data subject rights
+    engineering_requirements:
+      - {id: EGPDPL-RIGHTS-ER1, requirement: "Access, correction and erasure paths exist (subject to legal retention)", verification: manual}
+      - {id: EGPDPL-RIGHTS-ER2, requirement: "Erasure/anonymisation mechanism exists", verification: automated_partial, rules: [CG-PRIV-003]}
+  - id: EGPDPL-SECURITY
+    reference: "Law 151/2020 + ER 816/2025 - security of personal data (article UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Technical and organisational security
+    engineering_requirements:
+      - {id: EGPDPL-SEC-ER1, requirement: "Server-side authorisation and no unjustified privilege elevation", verification: automated_partial, rules: [CG-ODOO-SUDO-001, CG-ODOO-SUDO-003, CG-ODOO-AUTH-001, CG-ODOO-ACL-001, CG-ODOO-ACL-003, CG-ODOO-RULE-001]}
+      - {id: EGPDPL-SEC-ER2, requirement: "Injection/unsafe execution absent; secrets not exposed", verification: automated_partial, rules: [CG-PY-SQLI-001, CG-PY-CMDI-001, CG-PY-EVAL-001, CG-SEC-001, CG-PY-SECRET-001]}
+  - id: EGPDPL-SENSITIVE
+    reference: "Law 151/2020 - sensitive personal data (article UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Sensitive personal data
+    engineering_requirements:
+      - {id: EGPDPL-SENS-ER1, requirement: "Sensitive data fields restricted; additional legal conditions/permits determined", verification: automated_partial, rules: [CG-PRIV-001, CG-ODOO-PRIV-002]}
+      - {id: EGPDPL-SENS-ER2, requirement: "Licensing/permit obligations with the Personal Data Protection Center determined", verification: legal}
+  - id: EGPDPL-BREACH
+    reference: "Law 151/2020 - breach notification to the Center (article and timeline UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Breach notification
+    engineering_requirements:
+      - {id: EGPDPL-BREACH-ER1, requirement: "Breach detection and escalation runbook aligned with the verified statutory timeline", verification: manual}
+  - id: EGPDPL-DPO
+    reference: "Law 151/2020 - data protection officer (article UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Data protection officer
+    engineering_requirements:
+      - {id: EGPDPL-DPO-ER1, requirement: "DPO appointment/registration obligations determined", verification: legal}
+  - id: EGPDPL-TRANSFER
+    reference: "Law 151/2020 - cross-border transfer (article UNVERIFIED)"
+    reference_status: UNVERIFIED
+    title: Cross-border transfer
+    engineering_requirements:
+      - {id: EGPDPL-TRANSFER-ER1, requirement: "Transfers outside Egypt inventoried and transfer conditions/licences determined", verification: legal, rules: [CG-PRIV-005]}

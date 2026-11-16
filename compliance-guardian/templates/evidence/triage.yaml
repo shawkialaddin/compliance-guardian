@@ -1,0 +1,9 @@
+# compliance/triage.yaml - reviewer verdicts per finding fingerprint (rationale is mandatory).
+findings:
+  0123456789abcdef:
+    verdict: confirmed            # confirmed | false_positive | fixed
+    rationale: "Portal user can read any invoice via /my/invoice/<id>; reproduced with test user"
+    reviewer: "Jane Reviewer"
+    date: "2026-11-16"
+    severity: HIGH                # optional override with justification in rationale
+    risk_decision: ""             # MEDIUM: e.g. "Remediate by 2026-12-15 (SEC-42), owner: team X"
