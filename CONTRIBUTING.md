@@ -11,6 +11,7 @@ Thanks for helping improve compliance-guardian.
 
 ## Development
 ```bash
+git clone git@github.com:shawkialaddin/compliance-guardian.git && cd compliance-guardian
 ./install.sh --link          # symlink into ~/.claude/skills for live testing
 python3 -m pytest compliance-guardian/tests -q
 python3 compliance-guardian/scripts/cg.py scan . --fail-on HIGH   # dogfood (fixtures excluded)

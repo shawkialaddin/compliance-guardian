@@ -1,5 +1,7 @@
 # compliance-guardian
 
+Repository: https://github.com/shawkialaddin/compliance-guardian · SSH clone: `git@github.com:shawkialaddin/compliance-guardian.git`
+
 A Claude Code skill for **security-by-design and privacy-aware development**. It is backed by a deterministic, local, dependency-light scanner with deep **Odoo 16–20** awareness. It also covers Python, Django, FastAPI, JS/TS, Flutter, Docker, compose and CI.
 
 Findings are mapped to:
@@ -53,7 +55,7 @@ Findings are mapped to:
 ## Install
 
 ```bash
-git clone git@github.com:<owner>/compliance-guardian.git
+git clone git@github.com:shawkialaddin/compliance-guardian.git
 cd compliance-guardian
 ./install.sh            # copies to ~/.claude/skills/compliance-guardian, registers hook, adds CLAUDE.md pointer
 # options: --link (symlink for development), --no-hook, --no-claude-md, --uninstall

@@ -7,8 +7,11 @@
 
 ## Global install
 ```bash
+git clone git@github.com:shawkialaddin/compliance-guardian.git
+cd compliance-guardian
 ./install.sh
 ```
+Update later with `git pull && ./install.sh`.
 This:
 1. copies `compliance-guardian/` to `~/.claude/skills/compliance-guardian/` (an existing install is moved to `*.bak-<timestamp>`);
 2. adds a PostToolUse hook (`Write|Edit|MultiEdit` → `cg.py hook`) to `~/.claude/settings.json` (backup kept, idempotent, existing hooks preserved);
